@@ -43,6 +43,7 @@ variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '73e98f4e-e722-420b-8088-95b4e553e89b'
   tag: '$(Build.BuildId)'
+  anothercontainer: 'c94ba0ce52584150be713f692b7250d4'
 
 
 steps:
@@ -52,6 +53,7 @@ steps:
       echo "Login using service principal ${{ parameters.servicePrincipalId }}"
       az login --service-principal -u ${{ parameters.servicePrincipalId }} -p=$SP_SECRET --tenant ${{ parameters.tenantId }}
       az acr login --name ${{ parameters.containerRegistry }}
+      az acr login --name ${{ parameters.anothercontainer }}
 
       containerTag=$(Build.BuildId)
 
