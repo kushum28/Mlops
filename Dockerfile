@@ -1,6 +1,6 @@
 ARG BASEIMAGE="python:3.7"
 
-FROM kushmlcontainer.azurecr.io/base/python:3.10
+FROM kushmlcontainer.azurecr.io/base/python:3.8
 
 WORKDIR /app
 
