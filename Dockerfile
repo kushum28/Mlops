@@ -1,7 +1,6 @@
-ARG BASEIMAGE="python:3.7"
 
-FROM kushmlcontainer.azurecr.io/base/python:3.8
 
+RUN mkdir /app
 WORKDIR /app
 
 COPY main.py /app/main.py
