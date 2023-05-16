@@ -99,7 +99,7 @@ steps:
       imageNameIntegration=${{ parameters.containerRegistry }}.azurecr.io/${{ parameters.imageRepository }}:integration
 
       echo "Build with caching and push $imageName"
-      docker build ${{ parameters.dockerOptions }} -f ${{ parameters.dockerFilePath }} -t $imageName -t $imageNameIntegration --cache-from $imageNameIntegration ${{ parameters.dockerArguments }} --build-arg BUILDKIT_INLINE_CACHE=1 .
+      docker build -f ${{ parameters.dockerFilePath }} -t $imageName -t $imageNameIntegration --cache-from $imageNameIntegration --build-arg BUILDKIT_INLINE_CACHE=1 .
 
       docker push $imageName
       docker push $imageNameIntegration
