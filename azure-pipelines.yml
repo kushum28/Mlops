@@ -53,7 +53,7 @@ steps:
       echo "Login using service principal ${{ parameters.servicePrincipalId }}"
       az login --service-principal -u ${{ parameters.servicePrincipalId }} -p=$SP_SECRET --tenant ${{ parameters.tenantId }}
       az acr login --name ${{ parameters.containerRegistry }}
-      az acr login --name ${{ parameters.anothercontainer }}
+      az acr login --name $(anothercontainer)
 
       containerTag=$(Build.BuildId)
 
