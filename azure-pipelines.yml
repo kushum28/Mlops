@@ -16,7 +16,7 @@ parameters:
     default: Dockerfile
   - name: imageRepository
     type: string
-    default: $(Build.Repository.LocalPath)
+    default: 'anomaly'
   - name: protoVersion
     type: string
     default: none
