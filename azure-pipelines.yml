@@ -34,7 +34,7 @@ parameters:
     default: $(Build.Repository.LocalPath)
   - name: dockerArguments
     type: string
-    default: ''
+    default: '--build-arg PYTHON_VERSION=3.8'
   - name: dockerOptions # used for overriding the labels from base image
     type: string
     default: ''
