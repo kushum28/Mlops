@@ -10,7 +10,7 @@ resources:
 parameters:
   - name: containerRegistry
     type: string
-    default: '$(containerRegistry)'
+    default: 'kushmlcontainer'
   - name: dockerFilePath
     type: string
   - name: imageRepository
