@@ -3,9 +3,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
-  branches:
-    include:
-      - main
+- main
   paths:
     include:
       - src
@@ -39,9 +37,6 @@ parameters:
   - name: dockerArguments
     type: string
     default: '--build-arg PYTHON_VERSION=3.8'
-  - name: dockerOptions # used for overriding the labels from base image
-    type: string
-    default: ''
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '73e98f4e-e722-420b-8088-95b4e553e89b'
@@ -91,11 +86,7 @@ steps:
         echo "-----------------------"
       fi
 
-      if [ "${{parameters.dockerOptions}}" != '' ]; then
-        echo "-----------------------"
-        echo "Using docker build options: ${{ parameters.dockerOptions }}"
-        echo "-----------------------"
-      fi
+      
 
       echo "Showing current dir contents:"
       ls
