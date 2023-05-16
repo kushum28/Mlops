@@ -7,7 +7,34 @@ trigger:
 
 resources:
 - repo: self
-
+parameters:
+  - name: containerRegistry
+    type: string
+    default: '$(containerRegistry)'
+  - name: dockerFilePath
+    type: string
+  - name: imageRepository
+    type: string
+  - name: protoVersion
+    type: string
+    default: none
+  - name: servicePrincipalId
+    type: string
+    default: '$(servicePrincipalId)'
+  - name: servicePrincipalSecret
+    type: string
+    default: '$(servicePrincipalSecret)'
+  - name: tenantId
+    type: string
+    default: '$(tenantId)'
+  - name: workingDirectory
+    type: string
+  - name: dockerArguments
+    type: string
+    default: ''
+  - name: dockerOptions # used for overriding the labels from base image
+    type: string
+    default: ''
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '73e98f4e-e722-420b-8088-95b4e553e89b'
@@ -16,24 +43,71 @@ variables:
   dockerfilePath: Dockerfile
   tag: '$(Build.BuildId)'
 
-  # Agent VM image name
-  vmImageName: 'ubuntu-latest'
 
-stages:
-- stage: Build
-  displayName: Build and push stage
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+steps:
+  - bash: |
+      set -eux
+
+      echo "Login using service principal ${{ parameters.servicePrincipalId }}"
+      az login --service-principal -u ${{ parameters.servicePrincipalId }} -p=$SP_SECRET --tenant ${{ parameters.tenantId }}
+      az acr login --name ${{ parameters.containerRegistry }}
+
+      containerTag=$(Build.BuildId)
+
+      #
+      # Check if there is a version tag for IIOT Modules
+      #
+      dockerDir=$(dirname "${{ parameters.dockerFilePath }}")
+      if [ -e "$dockerDir/module.json" ]; then
+        echo "Found module.json file - Extracting version"
+        moduleVersion=$(cat "$dockerDir/module.json" | jq -r '.image.tag.version')
+        if [ "$moduleVersion" != "null" ]; then
+                echo "Using $moduleVersion to container Tag"
+                containerTag="$moduleVersion-$containerTag"
+        else
+                echo "Invalid tag in module.json. Won't try to use it"
+        fi
+      fi
+
+      if [ ${{parameters.protoVersion}} != "none" ]; then
+        containerTag+="-${{parameters.protoVersion}}"
+      fi
+
+      if [ "$(buildSource)" != "devops" ]; then
+        containerTag+="-testrun"
+      fi
+
+      echo "-----------------------"
+      echo "Using $containerTag"
+      echo "-----------------------"
+
+      if [ "${{parameters.dockerArguments}}" != '' ]; then
+        echo "-----------------------"
+        echo "Using docker build arguments: ${{ parameters.dockerArguments }}"
+        echo "-----------------------"
+      fi
+
+      if [ "${{parameters.dockerOptions}}" != '' ]; then
+        echo "-----------------------"
+        echo "Using docker build options: ${{ parameters.dockerOptions }}"
+        echo "-----------------------"
+      fi
+
+      echo "Showing current dir contents:"
+      ls
+
+      imageName=${{ parameters.containerRegistry }}.azurecr.io/${{ parameters.imageRepository }}:$containerTag
+      imageNameIntegration=${{ parameters.containerRegistry }}.azurecr.io/${{ parameters.imageRepository }}:integration
+
+      echo "Build with caching and push $imageName"
+      docker build ${{ parameters.dockerOptions }} -f ${{ parameters.dockerFilePath }} -t $imageName -t $imageNameIntegration --cache-from $imageNameIntegration ${{ parameters.dockerArguments }} --build-arg BUILDKIT_INLINE_CACHE=1 .
+
+      docker push $imageName
+      docker push $imageNameIntegration
+      trimmedBuildNumber=$(echo "$(Build.BuildNumber)" | cut -c 1-200)
+      echo "##vso[build.updatebuildnumber]$trimmedBuildNumber - Tag == $containerTag"
+    displayName: Build and publish docker image
+    failOnStderr: false
+    workingDirectory: ${{ parameters.workingDirectory }}
+    env:
+      SP_SECRET: ${{ parameters.servicePrincipalSecret }}
