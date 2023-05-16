@@ -15,20 +15,22 @@ parameters:
     type: string
   - name: imageRepository
     type: string
+    default: 'anomaly'
   - name: protoVersion
     type: string
     default: none
   - name: servicePrincipalId
     type: string
-    default: '$(servicePrincipalId)'
+    default: '972124e4-73b0-419c-8b53-510f4b7f8e43'
   - name: servicePrincipalSecret
     type: string
-    default: '$(servicePrincipalSecret)'
+    default: 'pp48Q~DkqzoYXyisucZC-wqj8Jvslp1oxUR-zcS-'
   - name: tenantId
     type: string
-    default: '$(tenantId)'
+    default: '72f988bf-86f1-41af-91ab-2d7cd011db47'
   - name: workingDirectory
     type: string
+    default: app
   - name: dockerArguments
     type: string
     default: ''
@@ -38,9 +40,6 @@ parameters:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '73e98f4e-e722-420b-8088-95b4e553e89b'
-  imageRepository: 'anomaly'
-  containerRegistry: 'kushmlcontainer.azurecr.io'
-  dockerfilePath: Dockerfile
   tag: '$(Build.BuildId)'
 
 
