@@ -13,9 +13,10 @@ parameters:
     default: 'kushmlcontainer'
   - name: dockerFilePath
     type: string
+    default: Dockerfile
   - name: imageRepository
     type: string
-    default: 'anomaly'
+    default: $(Build.Repository.LocalPath)
   - name: protoVersion
     type: string
     default: none
@@ -30,7 +31,7 @@ parameters:
     default: '72f988bf-86f1-41af-91ab-2d7cd011db47'
   - name: workingDirectory
     type: string
-    default: app
+    default: $(Build.Repository.LocalPath)
   - name: dockerArguments
     type: string
     default: ''
