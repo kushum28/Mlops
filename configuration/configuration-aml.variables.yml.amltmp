@@ -1,0 +1,33 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License.
+
+# Definition of AML-related environment variables
+
+variables:
+
+  PYTHON_VERSION: 3.7
+  SDK_VERSION: 1.27
+
+  AML_DATASET: PG_src_data_parm
+  AML_MODEL_NAME: PG_model.pkl
+
+  # Training
+  AML_TRAINING_EXPERIMENT: retraining-parm
+  AML_TRAINING_PIPELINE: PG-pipeline-parm
+  AML_TRAINING_COMPUTE: cpu-cluster12
+  AML_TRAINING_ENV_PATH: PnGDemo/configuration/environments/environment_training
+  TRAINING_MODEL_METRIC_NAME: anomaly_model
+  TRAINING_MAXIMIZE: False
+
+  # Batch inference
+  AML_BATCHINFERENCE_EXPERIMENT: batchinference-ojsales
+  AML_BATCHINFERENCE_PIPELINE: batchinference-pipeline-ojsales
+  AML_BATCHINFERENCE_COMPUTE: $(AML_TRAINING_COMPUTE)
+  AML_BATCHINFERENCE_ENV_PATH: PnGDemo/configuration/environments/environment_inference
+  BATCHINFERENCE_OUTPUT_DIR: forecasting_results
+  BATCHINFERENCE_OUTPUT_CONTAINER: modelprediction
+
+  # Real-time inference
+  AML_REALTIMEINFERENCE_ENV_PATH: $(AML_BATCHINFERENCE_ENV_PATH)
+  AKS_COMPUTE: aks-compute
+  AML_WEBSERVICE: ojsales-webservice
