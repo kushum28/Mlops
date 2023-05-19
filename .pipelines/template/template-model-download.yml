@@ -14,19 +14,15 @@ parameters:
     type: string
   - name: servicePrincipalId
     type: string
-    default: '972124e4-73b0-419c-8b53-510f4b7f8e43'
   - name: servicePrincipalSecret
     type: string
-    default: 'pp48Q~DkqzoYXyisucZC-wqj8Jvslp1oxUR-zcS-'
   - name: source
     type: string
-    default: 'testrun'
   - name: tenantId
     type: string
-    default: '72f988bf-86f1-41af-91ab-2d7cd011db47'
   - name: trainedModelDir
     type: string
-    default: 'anomaly_model'
+    default: trained_model
   - name: workingDir
     type: string
   - name: workingDirInferencing
