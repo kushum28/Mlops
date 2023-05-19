@@ -9,7 +9,7 @@ trigger:
   paths:
     include:
       - src
-      - .pipelines/template
+      - .pipelines/template/template-model-download.yml
 resources:
 - repo: self
 parameters:
@@ -57,7 +57,7 @@ stages:
   - stage: dev
     displayName: 'Model download'
     jobs:
-      - template: template-model-download.yml
+      - template: template/template-model-download.yml
         parameters:
           artifactName: $(mlModelArtifact)
           containerRegistry: ${{ parameters.containerRegistry }}
@@ -69,7 +69,7 @@ stages:
           servicePrincipalSecret: ${{ parameters.servicePrincipalSecret }}
           source: 'testrun'
           tenantId: ${{ parameters.tenantId }}
-          workingDir: ${{ parameters.workingDirectoryScripts }}
-          workingDirInferencing: ${{ parameters.workingDirectoryInferencing }}
+          workingDir: $(workingDirectoryScripts)
+          workingDirInferencing: $(workingDirectoryInferencing)
           workspaceName: 'MLTest'
           imageType: 'testimage'
