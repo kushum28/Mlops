@@ -10,6 +10,7 @@ trigger:
     include:
       - src
       - .pipelines/template/template-model-download.yml
+      - scripts
 resources:
 - repo: self
 parameters:
@@ -40,11 +41,7 @@ parameters:
   - name: dockerArguments
     type: string
     default: '--build-arg PYTHON_VERSION=3.8'
-variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '73e98f4e-e722-420b-8088-95b4e553e89b'
-  tag: '$(Build.BuildId)'
-  anothercontainer: 'c94ba0ce52584150be713f692b7250d4'
+
 
 
 steps:
