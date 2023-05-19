@@ -43,6 +43,9 @@ parameters:
   - name: modelName
     type: string
     default: 'anomaly_model'
+  - name: poolName
+    type: string
+    default: 'Default'
 variables:
   - name: workingDirectoryScripts
     value: '$(Build.SourcesDirectory)/scripts'
@@ -55,21 +58,22 @@ variables:
 
 stages:
   - stage: dev
-    displayName: 'Model download'
     jobs:
-      - template: template/template-model-download.yml
-        parameters:
-          artifactName: $(mlModelArtifact)
-          containerRegistry: ${{ parameters.containerRegistry }}
-          datasetConfig: ''
-          modelLabel: ''
-          modelName: ${{ parameters.modelName }}
-          resourceGroupName: 'kush-res-grp'
-          servicePrincipalId: ${{ parameters.servicePrincipalId }}
-          servicePrincipalSecret: ${{ parameters.servicePrincipalSecret }}
-          source: 'testrun'
-          tenantId: ${{ parameters.tenantId }}
-          workingDir: $(workingDirectoryScripts)
-          workingDirInferencing: $(workingDirectoryInferencing)
-          workspaceName: 'MLTest'
-          imageType: 'testimage'
+    - job: inferencing_service_ci_download
+      displayName: 'Download ML model'
+      pool: ${{ parameters.poolName }}
+      steps:
+        - template: template/template-model-download.yml
+          parameters:
+            artifactName: $(mlModelArtifact)
+            datasetConfig: ''
+            modelLabel: ''
+            modelName: ${{ parameters.modelName }}
+            resourceGroupName: 'kush-res-grp'
+            servicePrincipalId: ${{ parameters.servicePrincipalId }}
+            servicePrincipalSecret: ${{ parameters.servicePrincipalSecret }}
+            source: 'testrun'
+            tenantId: ${{ parameters.tenantId }}
+            workingDir: $(workingDirectoryScripts)
+            workingDirInferencing: $(workingDirectoryInferencing)
+            workspaceName: 'MLTest'
