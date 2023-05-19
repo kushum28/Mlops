@@ -43,9 +43,7 @@ parameters:
   - name: modelName
     type: string
     default: 'anomaly_model'
-  - name: poolName
-    type: string
-    default: 'Default'
+
 variables:
   - name: workingDirectoryScripts
     value: '$(Build.SourcesDirectory)/scripts'
@@ -61,7 +59,8 @@ stages:
     jobs:
     - job: inferencing_service_ci_download
       displayName: 'Download ML model'
-      pool: ${{ parameters.poolName }}
+      pool:
+       vmImage: 'ubuntu-latest'
       steps:
         - template: template/template-model-download.yml
           parameters:
