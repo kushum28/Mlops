@@ -68,7 +68,7 @@ steps:
         --overwrite
 
       echo Here are the downloaded model files in ${{ parameters.trainedModelDir }}/${{ parameters.modelName }}
-      ls -a ${{ parameters.trainedModelDir }}/${{ parameters.modelName }}
+     # ls -a ${{ parameters.trainedModelDir }}/${{ parameters.modelName }}
     workingDirectory: ${{ parameters.workingDir }}
     displayName: 'Download Azure ML model'
     env:
