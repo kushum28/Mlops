@@ -1,0 +1,96 @@
+
+parameters:
+  - name: containerRegistry
+    type: string
+    default: 'kushmlcontainer'
+  - name: dockerFilePath
+    type: string
+    default: Dockerfile
+  - name: imageRepository
+    type: string
+    default: 'anomaly'
+  - name: protoVersion
+    type: string
+    default: none
+  - name: servicePrincipalId
+    type: string
+    default: '972124e4-73b0-419c-8b53-510f4b7f8e43'
+  - name: servicePrincipalSecret
+    type: string
+    default: 'pp48Q~DkqzoYXyisucZC-wqj8Jvslp1oxUR-zcS-'
+  - name: tenantId
+    type: string
+    default: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+  - name: workingDirectory
+    type: string
+    default: 'src/docker'
+  - name: dockerArguments
+    type: string
+    default: '--build-arg PYTHON_VERSION=3.8'
+
+
+
+steps:
+  - bash: |
+      set -eux
+
+      echo "Login using service principal ${{ parameters.servicePrincipalId }}"
+      az login --service-principal -u ${{ parameters.servicePrincipalId }} -p=$SP_SECRET --tenant ${{ parameters.tenantId }}
+      az acr login --name ${{ parameters.containerRegistry }}
+      az acr login --name $(anothercontainer)
+
+      containerTag=$(Build.BuildId)
+
+      #
+      # Check if there is a version tag for IIOT Modules
+      #
+      dockerDir=$(dirname "${{ parameters.dockerFilePath }}")
+      if [ -e "$dockerDir/module.json" ]; then
+        echo "Found module.json file - Extracting version"
+        moduleVersion=$(cat "$dockerDir/module.json" | jq -r '.image.tag.version')
+        if [ "$moduleVersion" != "null" ]; then
+                echo "Using $moduleVersion to container Tag"
+                containerTag="$moduleVersion-$containerTag"
+        else
+                echo "Invalid tag in module.json. Won't try to use it"
+        fi
+      fi
+
+      if [ ${{parameters.protoVersion}} != "none" ]; then
+        containerTag+="-${{parameters.protoVersion}}"
+      fi
+
+      if [ "$(buildSource)" != "devops" ]; then
+        containerTag+="-testrun"
+      fi
+
+      echo "-----------------------"
+      echo "Using $containerTag"
+      echo "-----------------------"
+
+      if [ "${{parameters.dockerArguments}}" != '' ]; then
+        echo "-----------------------"
+        echo "Using docker build arguments: ${{ parameters.dockerArguments }}"
+        echo "-----------------------"
+      fi
+
+      
+
+      echo "Showing current dir contents:"
+      ls
+
+      imageName=${{ parameters.containerRegistry }}.azurecr.io/${{ parameters.imageRepository }}:$containerTag
+      imageNameIntegration=${{ parameters.containerRegistry }}.azurecr.io/${{ parameters.imageRepository }}:integration
+
+      echo "Build with caching and push $imageName"
+      docker build -f ${{ parameters.dockerFilePath }} -t $imageName -t $imageNameIntegration --cache-from $imageNameIntegration --build-arg BUILDKIT_INLINE_CACHE=1 .
+
+      docker push $imageName
+      docker push $imageNameIntegration
+      trimmedBuildNumber=$(echo "$(Build.BuildNumber)" | cut -c 1-200)
+      echo "##vso[build.updatebuildnumber]$trimmedBuildNumber - Tag == $containerTag"
+    displayName: Build and publish docker image
+    failOnStderr: false
+    workingDirectory: ${{ parameters.workingDirectory }}
+    env:
+      SP_SECRET: ${{ parameters.servicePrincipalSecret }}
