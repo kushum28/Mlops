@@ -40,9 +40,6 @@ parameters:
   - name: dockerArguments
     type: string
     default: '--build-arg PYTHON_VERSION=3.8'
-  - name: modelLabel
-    type: string
-    default: ''
   - name: modelName
     type: string
     default: 'anomaly_model'
@@ -65,7 +62,7 @@ stages:
           artifactName: $(mlModelArtifact)
           containerRegistry: ${{ parameters.containerRegistry }}
           datasetConfig: ''
-          modelLabel: ${{ parameters.modelLabel }}
+          modelLabel: ''
           modelName: ${{ parameters.modelName }}
           resourceGroupName: 'kush-res-grp'
           servicePrincipalId: ${{ parameters.servicePrincipalId }}
