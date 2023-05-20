@@ -33,7 +33,7 @@ steps:
 
       mkdir -p ${{ parameters.trainedModelDir }}/${{ parameters.modelName }}
 
-     modelHeaderCommand="az ml model list  --model-name ${{ parameters.modelName }} --resource-group ${{ parameters.resourceGroupName }} --workspace-name ${{ parameters.workspaceName }}  $properties --latest --query '[0]' -o json"
+      modelHeaderCommand="az ml model list  --model-name ${{ parameters.modelName }} --resource-group ${{ parameters.resourceGroupName }} --workspace-name ${{ parameters.workspaceName }}  $properties --latest --query '[0]' -o json"
       echo "Command to retrieve model header: $modelHeaderCommand"
 
       modelHeader=$(eval $modelHeaderCommand)
