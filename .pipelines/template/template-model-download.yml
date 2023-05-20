@@ -68,14 +68,14 @@ steps:
         --overwrite
 
       echo Here are the downloaded model files in ${{ parameters.trainedModelDir }}/${{ parameters.modelName }}
-     # ls -a ${{ parameters.trainedModelDir }}/${{ parameters.modelName }}
+      ls -a ${{ parameters.trainedModelDir }}/${{ parameters.modelName }}
     workingDirectory: ${{ parameters.workingDir }}
     displayName: 'Download Azure ML model'
     env:
       SP_SECRET: ${{ parameters.servicePrincipalSecret }}
 
   - script: |
-      mv ${{ parameters.workingDir }}/${{ parameters.trainedModelDir }}/${{ parameters.modelName }}/* ${{ parameters.workingDirInferencing }}/recommendation/lib
+      mv ${{ parameters.trainedModelDir }}/${{ parameters.modelName }}/* ${{ parameters.workingDirInferencing }}/recommendation/lib
     displayName: Move ML Model files
     workingDirectory: ${{ parameters.workingDir }}
 
