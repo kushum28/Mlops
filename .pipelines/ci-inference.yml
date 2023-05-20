@@ -17,7 +17,7 @@ resources:
 
 variables:
   - name: workingDirectoryScripts
-    value: '$(Build.SourcesDirectory)/scripts'
+    value: '$(Build.SourcesDirectory)'
   - name: workingDirectoryInferencing
     value: '$(Build.SourcesDirectory)'
   - name: mlModelArtifact
