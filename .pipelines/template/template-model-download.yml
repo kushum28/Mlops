@@ -32,32 +32,27 @@ parameters:
 
 steps:
   - bash: |
+      
+      az extension add -n azure-cli-ml
       echo "Login using service principal ${{ parameters.servicePrincipalId }}"
       az login --service-principal -u ${{ parameters.servicePrincipalId }} -p=$SP_SECRET --tenant ${{ parameters.tenantId }}
 
       mkdir -p ${{ parameters.trainedModelDir }}/${{ parameters.modelName }}
 
-      labelName=''
-      if ! [ -z "${{ parameters.modelLabel }}" ]
-      then
-        labelName=$(bash prepare_model_label.sh -l ${{ parameters.modelLabel }} -f ${{ parameters.datasetConfig }})
-        echo "Label created: " $labelName
-      fi
-      
-      az ml model list --model-name ${{ parameters.modelName }} \
-        --resource-group ${{ parameters.resourceGroupName }} \
-        --workspace-name ${{ parameters.workspaceName }} \
-        --latest
-      
+     modelHeaderCommand="az ml model list  --model-name ${{ parameters.modelName }} --resource-group ${{ parameters.resourceGroupName }} --workspace-name ${{ parameters.workspaceName }}  $properties --latest --query '[0]' -o json"
+      echo "Command to retrieve model header: $modelHeaderCommand"
 
-      model_id=$(echo $modelDetails | jq -r .id)
+      modelHeader=$(eval $modelHeaderCommand)
+       if [ -z "$modelHeader" ]
+       then
+         echo "Model header not found!"
+         return
+       fi
+
+
+      model_id=$(echo $modelHeader | jq -r .id)
 
       echo Model Id found: $model_id
-
-      echo "##vso[task.setvariable variable=modelId]$model_id"
-
-      echo "Writing Model Version to the file -> ${{ parameters.workingDirInferencing }}/model_version.yml"
-      echo "model_version: $model_id" > ${{ parameters.workingDirInferencing }}/model_version.yml
 
       az ml model download --model-id $model_id \
         --target-dir ${{ parameters.trainedModelDir }} \
