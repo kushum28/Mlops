@@ -43,14 +43,12 @@ steps:
         labelName=$(bash prepare_model_label.sh -l ${{ parameters.modelLabel }} -f ${{ parameters.datasetConfig }})
         echo "Label created: " $labelName
       fi
-
-      source get_model_details.sh \
-        modelName=${{ parameters.modelName }} \
-        resourceGroupName=${{ parameters.resourceGroupName }} \
-        workspaceName=${{ parameters.workspaceName }} \
-        source=${{ parameters.source }} \
-        buildId=${{ parameters.amlModelBuildId }} \
-        label=$labelName
+      
+       az ml model list --model-name ${{ parameters.modelName }} \
+        --resource-group ${{ parameters.resourceGroupName }} \
+        --workspace-name ${{ parameters.workspaceName }} \
+        --latest
+      
 
       model_id=$(echo $modelDetails | jq -r .id)
 
