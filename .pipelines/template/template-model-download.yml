@@ -4,10 +4,6 @@ parameters:
     default: ''
   - name: artifactName
     type: string
-  - name: datasetConfig
-    type: string
-  - name: modelLabel
-    type: string
   - name: modelName
     type: string
   - name: resourceGroupName
@@ -16,13 +12,11 @@ parameters:
     type: string
   - name: servicePrincipalSecret
     type: string
-  - name: source
-    type: string
   - name: tenantId
     type: string
   - name: trainedModelDir
     type: string
-    default: azureml-models
+    default: 'trained_model'
   - name: workingDir
     type: string
   - name: workingDirInferencing
