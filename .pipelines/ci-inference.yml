@@ -14,37 +14,6 @@ trigger:
       - .pipelines/template/template-model-download.yml
 resources:
 - repo: self
-parameters:
-  - name: containerRegistry
-    type: string
-    default: 'kushmlcontainer'
-  - name: dockerFilePath
-    type: string
-    default: Dockerfile
-  - name: imageRepository
-    type: string
-    default: 'anomaly'
-  - name: protoVersion
-    type: string
-    default: none
-  - name: servicePrincipalId
-    type: string
-    default: '972124e4-73b0-419c-8b53-510f4b7f8e43'
-  - name: servicePrincipalSecret
-    type: string
-    default: 'pp48Q~DkqzoYXyisucZC-wqj8Jvslp1oxUR-zcS-'
-  - name: tenantId
-    type: string
-    default: '72f988bf-86f1-41af-91ab-2d7cd011db47'
-  - name: workingDirectory
-    type: string
-    default: 'src/docker'
-  - name: dockerArguments
-    type: string
-    default: '--build-arg PYTHON_VERSION=3.8'
-  - name: modelName
-    type: string
-    default: 'anomaly_model'
 
 variables:
   - name: workingDirectoryScripts
@@ -53,28 +22,27 @@ variables:
     value: '$(Build.SourcesDirectory)'
   - name: mlModelArtifact
     value: 'azureml-app'
-
+  - name: vmImageName
+    value: 'ubuntu-latest'
 
 
 stages:
   - stage: dev
     jobs:
-    - job: inferencing_service_ci_download
-      displayName: 'Download ML model'
-      pool:
-       vmImage: 'ubuntu-latest'
-      steps:
-        - template: template/template-model-download.yml
-          parameters:
-            artifactName: $(mlModelArtifact)
-            datasetConfig: ''
-            modelLabel: ''
-            modelName: ${{ parameters.modelName }}
-            resourceGroupName: 'kush-res-grp'
-            servicePrincipalId: ${{ parameters.servicePrincipalId }}
-            servicePrincipalSecret: ${{ parameters.servicePrincipalSecret }}
-            source: 'testrun'
-            tenantId: ${{ parameters.tenantId }}
-            workingDir: $(workingDirectoryScripts)
-            workingDirInferencing: $(workingDirectoryInferencing)
-            workspaceName: 'MLTest'
+      - job: inferencing_service_ci_download
+        displayName: 'Download ML model'
+        pool:
+          vmImage: $(vmImageName)
+        steps:
+          - template: ./template/template-model-download.yml
+            parameters:
+              artifactName: $(mlModelArtifact)
+              modelName: 'anomaly_model'
+              resourceGroupName: 'kush-res-grp'
+              servicePrincipalId: '972124e4-73b0-419c-8b53-510f4b7f8e43'
+              servicePrincipalSecret: 'pp48Q~DkqzoYXyisucZC-wqj8Jvslp1oxUR-zcS-'
+              tenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+              workingDir: $(workingDirectoryScripts)
+              workingDirInferencing: $(workingDirectoryInferencing)
+              workspaceName: 'MLTest'
+
