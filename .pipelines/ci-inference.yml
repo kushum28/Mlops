@@ -50,7 +50,7 @@ variables:
   - name: workingDirectoryInferencing
     value: '$(Build.SourcesDirectory)'
   - name: mlModelArtifact
-    value: 'ml-model-files'
+    value: 'azureml-app'
 
 
 
