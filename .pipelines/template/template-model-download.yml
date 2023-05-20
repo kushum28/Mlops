@@ -66,5 +66,5 @@ steps:
     displayName: Move ML Model files
     workingDirectory: ${{ parameters.workingDir }}
 
-  - publish: ${{ parameters.workingDirInferencing }}
+  - publish: ${{ parameters.workingDirInferencing }}/recommendation/lib
     artifact: ${{ parameters.artifactName }}
