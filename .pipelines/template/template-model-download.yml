@@ -49,7 +49,7 @@ steps:
       echo Model Id found: $model_id
 
       az ml model download --model-id $model_id \
-        --target-dir ${{ parameters.trainedModelDir }}/${{ parameters.modelName }} \
+        --target-dir ${{ parameters.workingDirInferencing }} \
         --resource-group ${{ parameters.resourceGroupName }} \
         --workspace-name ${{ parameters.workspaceName }} \
         --overwrite
@@ -66,5 +66,5 @@ steps:
     displayName: Move ML Model files
     workingDirectory: ${{ parameters.workingDir }}
 
-  - publish: ${{ parameters.trainedModelDir }}/${{ parameters.modelName }}
+  - publish: ${{ parameters.workingDirInferencing }}
     artifact: ${{ parameters.artifactName }}
