@@ -4,3 +4,25 @@
 .ipynb_aml_checkpoints/ 
 *.amltmp 
 *.amltemp
+# AML ignore
+
+# Ignore these folder contents
+venv/
+venv-win/
+__pycache__/
+.pytest_cache/
+.git/
+.vscode/
+tests/
+aml/
+localtestinput/
+localtestoutput/
+outputs/
+
+# Ignore these files
+*.md
+.DS_Store
+.env
+.gitignore
+.flake8
+*.ini
