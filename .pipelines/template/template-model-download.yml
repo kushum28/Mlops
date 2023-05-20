@@ -62,9 +62,9 @@ steps:
       SP_SECRET: ${{ parameters.servicePrincipalSecret }}
 
   - script: |
-      mv ${{ parameters.workingDir }}/${{ parameters.trainedModelDir }}/${{ parameters.modelName }}/* ${{ parameters.workingDirInferencing }}/recommendation/lib
+     # mv ${{ parameters.workingDir }}/${{ parameters.trainedModelDir }}/${{ parameters.modelName }}/* ${{ parameters.workingDirInferencing }}/recommendation/lib
     displayName: Move ML Model files
     workingDirectory: ${{ parameters.workingDir }}
 
-  - publish: ${{ parameters.workingDirInferencing }}
+  - publish: ${{ parameters.trainedModelDir }}/${{ parameters.modelName }}
     artifact: ${{ parameters.artifactName }}
