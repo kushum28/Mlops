@@ -44,7 +44,7 @@ steps:
         echo "Label created: " $labelName
       fi
       
-       az ml model list --model-name ${{ parameters.modelName }} \
+      az ml model list --model-name ${{ parameters.modelName }} \
         --resource-group ${{ parameters.resourceGroupName }} \
         --workspace-name ${{ parameters.workspaceName }} \
         --latest
