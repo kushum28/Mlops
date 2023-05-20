@@ -8,6 +8,8 @@ trigger:
       - main
   paths:
     include:
+      - scripts
+      - recomendation/lib
       - src
       - .pipelines/template/template-model-download.yml
 resources:
