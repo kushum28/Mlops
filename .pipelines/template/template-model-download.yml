@@ -22,7 +22,7 @@ parameters:
     type: string
   - name: trainedModelDir
     type: string
-    default: trained_model
+    default: azureml-models
   - name: workingDir
     type: string
   - name: workingDirInferencing
