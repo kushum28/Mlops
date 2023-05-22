@@ -28,6 +28,8 @@ variables:
 
 stages:
   - stage: dev
+    variables:
+      - group: test
     jobs:
       - job: inferencing_service_ci_download
         displayName: 'Download ML model'
@@ -39,9 +41,9 @@ stages:
               artifactName: $(mlModelArtifact)
               modelName: 'anomaly_model'
               resourceGroupName: 'kush-res-grp'
-              servicePrincipalId: '972124e4-73b0-419c-8b53-510f4b7f8e43'
-              servicePrincipalSecret: 'pp48Q~DkqzoYXyisucZC-wqj8Jvslp1oxUR-zcS-'
-              tenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+              servicePrincipalId: 'd0cdbd9a-7ee8-4320-8cd1-39cfd96354ac'
+              servicePrincipalSecret: $(secret)
+              tenantId: 'a044c9d6-d5f2-45bc-bb45-87024704ed38'
               workingDir: $(workingDirectoryScripts)
               workingDirInferencing: $(workingDirectoryInferencing)
               workspaceName: 'MLTest'
