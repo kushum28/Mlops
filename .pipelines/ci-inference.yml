@@ -41,7 +41,7 @@ stages:
               artifactName: $(mlModelArtifact)
               modelName: 'anomaly_model'
               resourceGroupName: 'kush-res-grp'
-              servicePrincipalId: 'd0cdbd9a-7ee8-4320-8cd1-39cfd96354ac'
+              servicePrincipalId: '8121948a-f58e-4f2f-a6ad-52e2d9ff1a7d'
               servicePrincipalSecret: $(secret)
               tenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
               workingDir: $(workingDirectoryScripts)
