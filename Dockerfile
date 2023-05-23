@@ -1,1 +1,1 @@
-echo "FROM mcr.microsoft.com/hello-world" > Dockerfile
+from myContainerRegistry008/sample/hello-world:v1
