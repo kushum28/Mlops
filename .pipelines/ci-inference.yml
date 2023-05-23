@@ -43,7 +43,7 @@ stages:
               resourceGroupName: 'kush-res-grp'
               servicePrincipalId: 'd0cdbd9a-7ee8-4320-8cd1-39cfd96354ac'
               servicePrincipalSecret: $(secret)
-              tenantId: 'a044c9d6-d5f2-45bc-bb45-87024704ed38'
+              tenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
               workingDir: $(workingDirectoryScripts)
               workingDirInferencing: $(workingDirectoryInferencing)
               workspaceName: 'MLTest'
