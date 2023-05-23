@@ -1,1 +1,1 @@
-echo "FROM mcr.microsoft.com/hello-world"
+echo "FROM mcr.microsoft.com/hello-world" > Dockerfile
